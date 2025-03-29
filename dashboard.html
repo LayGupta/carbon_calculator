@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonCalc - Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --background-color: #f0f7f4;
+            --card-background: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 1.5rem;
+        }
+
+        ul li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "•";
+            position: absolute;
+            left: -1rem;
+            color: var(--primary-color);
+        }
+
+        .recommendations li::before {
+            content: "🌱";
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">CarbonCalc 🌿</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="calculator.html">Calculator</a>
+            <a href="profile.html">Profile</a>
+            <a href="about.html">About</a>
+            <a href="auth.html" id="logoutButton">Sign In</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Your Carbon Impact Dashboard</h1>
+        
+        <div class="dashboard-grid">
+            <!-- Personal Carbon Score -->
+            <div class="dashboard-card">
+                <h3>Personal Carbon Score</h3>
+                <div class="score-container">
+                    <canvas id="carbonScoreChart" width="200" height="200"></canvas>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <div style="background: #f8f9fa; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <p><strong>5.2</strong></p>
+                        <p>Current CO<sub>2</sub> (tons/year)</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 0.8rem; border-radius: 8px;">
+                        <p><strong>4.0</strong></p>
+                        <p>Target CO<sub>2</sub> (tons/year)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="dashboard-card">
+                <h3>Category Breakdown</h3>
+                <canvas id="categoryChart" width="200" height="200"></canvas>
+            </div>
+
+            <!-- Environmental Impact -->
+            <div class="dashboard-card">
+                <h3>Environmental Impact</h3>
+                <ul>
+                    <li>Equivalent to 23 trees needed for offset</li>
+                    <li>Carbon footprint higher than 65% of users</li>
+                    <li>Potential savings: 1.2 tons CO<sub>2</sub>/year</li>
+                </ul>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="dashboard-card">
+                <h3>Quick Facts</h3>
+                <ul>
+                    <li>Global average: 4.7 tons CO<sub>2</sub>/person/year</li>
+                    <li>Your country average: 5.9 tons CO<sub>2</sub>/person/year</li>
+                    <li>Sustainable target: 2.0 tons CO<sub>2</sub>/person/year</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Monthly Carbon Emission Trends -->
+        <div class="chart-container">
+            <h3>Monthly Carbon Emission Trends</h3>
+            <canvas id="trendChart"></canvas>
+        </div>
+
+        <!-- Smart Recommendations -->
+        <div class="dashboard-card">
+            <h3>Smart Recommendations</h3>
+            <ul class="recommendations">
+                <li>Switch to LED bulbs - Potential savings: 0.3 tons CO<sub>2</sub>/year</li>
+                <li>Use public transport twice a week - Potential savings: 0.5 tons CO<sub>2</sub>/year</li>
+                <li>Reduce meat consumption by 30% - Potential savings: 0.4 tons CO<sub>2</sub>/year</li>
+                <li>Install smart thermostat - Potential savings: 0.2 tons CO<sub>2</sub>/year</li>
+            </ul>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CarbonCalc</h3>
+                    <p>Empowering individuals to reduce their carbon footprint.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="contact-info">
+                        <a href="mailto:info@carboncalc.com">info@carboncalc.com</a>
+                        <a href="tel:+91 9315458767">+91 9315458767</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="https://twitter.com/carboncalc" title="Twitter">X</a>
+                        <a href="https://facebook.com/carboncalc" title="Facebook">f</a>
+                        <a href="https://instagram.com/carboncalc" title="Instagram">📸</a>
+                        <a href="https://linkedin.com/company/carboncalc" title="LinkedIn">in</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CarbonCalc. All rights reserved. 
+                    <a href="#" style="color: white; text-decoration: none; margin: 0 10px;">Privacy</a> |
+                    <a href="#" style="color: white; text-decoration: none; margin: 0 10px;">Terms</a>
+                </p>
+            </div>
+        </footer>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const authButton = document.getElementById('logoutButton');
+            
+            if (token) {
+                authButton.textContent = 'Logout';
+                authButton.addEventListener('click', function() {
+                    localStorage.removeItem('token');
+                    window.location.href = 'auth.html';
+                });
+                
+                // Fetch dashboard data from backend
+                fetchDashboardData(token);
+            } else {
+                authButton.textContent = 'Sign In';
+                authButton.addEventListener('click', function() {
+                    window.location.href = 'auth.html';
+                });
+            }
+        });
+        
+        // Fetch dashboard data function
+        async function fetchDashboardData(token) {
+            try {
+                const response = await fetch('http://localhost:5000/api/dashboard', {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Dashboard data:', data);
+                    
+                    // Update dashboard with real data
+                    if (data && data.length > 0) {
+                        // Get the most recent calculation
+                        const latestData = data[0];
+                        
+                        // Update Personal Carbon Score
+                        updateCarbonScore(latestData.carbonFootprint);
+                        
+                        // Update Category Breakdown
+                        updateCategoryBreakdown(latestData);
+                        
+                        // Update Trend Chart if multiple calculations exist
+                        if (data.length > 1) {
+                            updateTrendChart(data);
+                        }
+                        
+                        // Update recommendations based on latest data
+                        updateRecommendations(latestData);
+                    } else {
+                        console.log('No calculations found for this user');
+                    }
+                } else {
+                    console.error('Failed to fetch dashboard data');
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        }
+        // Update Carbon Score with real data
+function updateCarbonScore(carbonFootprint) {
+    // Update the score text
+    const scoreElement = document.querySelector('.dashboard-card:first-child strong');
+    if (scoreElement) {
+        scoreElement.textContent = carbonFootprint.toFixed(1);
+    }
+    
+    // Update the doughnut chart
+    const carbonScoreChart = Chart.getChart('carbonScoreChart');
+    if (carbonScoreChart) {
+        // Calculate percentage (assuming 10 tons is 100%)
+        const percentage = Math.min(100, (carbonFootprint / 10) * 100);
+        carbonScoreChart.data.datasets[0].data = [percentage, 100 - percentage];
+        carbonScoreChart.update();
+    }
+}
+
+// Update Category Breakdown with real data
+function updateCategoryBreakdown(data) {
+    const categoryChart = Chart.getChart('categoryChart');
+    if (categoryChart) {
+        // Calculate category percentages based on the data
+        // This is an example - adjust based on your actual data structure
+        const transportation = data.commuteDistance * (data.vehicleType === 'Car' ? 0.21 : 0.05);
+        const energy = data.electricityUsage * 0.45;
+        const food = data.dietType === 'Meat daily' ? 3 : 
+                    data.dietType === 'Vegetarian' ? 1 : 0.5;
+        
+        // Update chart data
+        categoryChart.data.datasets[0].data = [
+            transportation,
+            energy,
+            food,
+            // Other categories can be calculated similarly
+            10, // Shopping (placeholder)
+            5   // Others (placeholder)
+        ];
+        categoryChart.update();
+    }
+}
+
+// Update Trend Chart with historical data
+function updateTrendChart(data) {
+    const trendChart = Chart.getChart('trendChart');
+    if (trendChart) {
+        // Sort data by date (newest first)
+        const sortedData = [...data].sort((a, b) => 
+            new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        
+        // Get the last 6 entries (or fewer if less data exists)
+        const recentData = sortedData.slice(0, 6).reverse();
+        
+        // Extract dates and carbon footprint values
+        const labels = recentData.map(entry => {
+            const date = new Date(entry.createdAt);
+            return date.toLocaleDateString('en-US', { month: 'short' });
+        });
+        
+        const emissions = recentData.map(entry => entry.carbonFootprint);
+        
+        // Update chart data
+        trendChart.data.labels = labels;
+        trendChart.data.datasets[0].data = emissions;
+        
+        // Create target path (linear reduction)
+        if (emissions.length > 1) {
+            const start = emissions[0];
+            const targetEnd = start * 0.8; // 20% reduction target
+            
+            const targetPath = [];
+            for (let i = 0; i < emissions.length; i++) {
+                const reduction = (start - targetEnd) * (i / (emissions.length - 1));
+                targetPath.push(start - reduction);
+            }
+            
+            trendChart.data.datasets[1].data = targetPath;
+        }
+        
+        trendChart.update();
+    }
+}
+
+    // Update recommendations based on user data
+    function updateRecommendations(data) {
+    // This is a placeholder - you would implement logic to generate
+    // personalized recommendations based on the user's data
+    console.log('Updating recommendations based on user data');
+    }
+
+        // Carbon Score Chart (Progress Circle)
+        const carbonScoreCtx = document.getElementById('carbonScoreChart').getContext('2d');
+        new Chart(carbonScoreCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: ['#2ecc71', '#ecf0f1'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+
+        // Category Breakdown Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Transportation', 'Home Energy', 'Food', 'Shopping', 'Others'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: [
+                        '#2ecc71',
+                        '#3498db',
+                        '#e74c3c',
+                        '#f1c40f',
+                        '#95a5a6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    }
+                }
+            }
+        });
+
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Your Emissions',
+                    data: [6.0, 5.8, 5.5, 5.3, 5.1, 4.9],
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                    fill: true
+                },
+                {
+                    label: 'Target Path',
+                    data: [6.0, 5.6, 5.2, 4.8, 4.4, 4.0],
+                    borderColor: '#3498db',
+                    borderDash: [5, 5],
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'CO₂ Emissions (tons)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
