@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const connectDB = require('./config/db');
+const connectDB = require('./backend/config/db');// idhar change kiya hai 
 
 // Connect to MongoDB
 connectDB();
