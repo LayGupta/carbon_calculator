@@ -1,5 +1,3 @@
-Here’s a simplified and clean version of the README.md file for your Carbon Footprint Calculator project:
-
 ---
 
 # **CarbonCalc - Carbon Footprint Calculator**
